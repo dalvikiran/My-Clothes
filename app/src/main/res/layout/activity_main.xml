@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".activities.MainActivity">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/shirts_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:id="@+id/add_shirts_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/shirt_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_shirt"
+                    android:layout_centerInParent="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_shirts"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/shirt_image_view"
+                    />
+
+            </RelativeLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/black"/>
+
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/trousers_view_pager"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:visibility="gone"/>
+
+            <RelativeLayout
+                android:id="@+id/add_trousers_layout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <ImageView
+                    android:id="@+id/trouser_image_view"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/icon_trouser"
+                    android:layout_centerInParent="true"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/add_trousers"
+                    android:textColor="@color/black"
+                    android:layout_centerHorizontal="true"
+                    android:layout_below="@+id/trouser_image_view"
+                    />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/add_shirt_image_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_add"
+            android:background="@drawable/circle_white"
+            android:padding="5dp"
+            app:tint="@color/black"
+            android:layout_margin="10dp"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/add_trouser_image_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_add"
+            android:background="@drawable/circle_white"
+            android:padding="5dp"
+            app:tint="@color/black"
+            android:layout_margin="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/favorite_image_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_favorite_border"
+            android:background="@drawable/circle_white"
+            android:padding="10dp"
+            app:tint="@color/red"
+            android:layout_margin="10dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone"/>
+
+        <ImageView
+            android:id="@+id/shuffle_image_view"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_sync"
+            android:background="@drawable/circle_white"
+            android:padding="7dp"
+            app:tint="@color/black"
+            android:layout_margin="10dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"/>
+
+        <TextView
+            android:id="@+id/shirt_pager_indicator_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/10"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:visibility="gone"
+            android:background="@drawable/circle_white"
+            />
+
+        <TextView
+            android:id="@+id/trouser_pager_indicator_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1/10"
+            android:textColor="@color/black"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:padding="5dp"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"
+            android:background="@drawable/circle_white"
+            />
+    </RelativeLayout>
+
+</layout>

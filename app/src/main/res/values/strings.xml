@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">My Clothes</string>
+    <string name="add_shirts">Add Shirts</string>
+    <string name="add_trousers">Add Trousers</string>
+</resources>
