@@ -17,16 +17,12 @@ import kotlin.collections.ArrayList
 
 class ClothesViewPagerAdapter(context: Context, clothes: ArrayList<Clothes>) : PagerAdapter() {
 
-       // Context object
     var context: Context
 
-    // Array of images
     var clothes: ArrayList<Clothes>
 
-    // Layout Inflater
     var mLayoutInflater: LayoutInflater
 
-    // Viewpager Constructor
     init {
         this.context = context
         this.clothes = clothes
@@ -39,7 +35,6 @@ class ClothesViewPagerAdapter(context: Context, clothes: ArrayList<Clothes>) : P
     }
 
     override fun getCount(): Int {
-        // return the number of images
         return clothes.size
     }
 
@@ -48,22 +43,14 @@ class ClothesViewPagerAdapter(context: Context, clothes: ArrayList<Clothes>) : P
     }
 
     override fun instantiateItem(container: ViewGroup, position: Int): Any {
-        // inflating the item.xml
         val itemView: View = mLayoutInflater.inflate(R.layout.clothes_item_layout, container, false)
 
-        // referencing the image view from the item.xml file
         val imageView: ImageView = itemView.findViewById(R.id.clothes_image_view) as ImageView
 
-//        Uri.fromFile(File(images[position]))
-        // setting the image in the imageView
         imageView.setImageURI(Uri.parse(clothes[position].imagePath))
 
-       /* Glide.with(mContext)
-                .load(new File(pictureUri.getPath())) // Uri of the picture
-            .into(profileAvatar);*/
-
         Glide.with(context)
-            .load(File(Uri.parse(clothes[position].imagePath).path)) //                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .load(File(Uri.parse(clothes[position].imagePath).path))
             .into(imageView)
 
         // Adding the View
@@ -72,7 +59,6 @@ class ClothesViewPagerAdapter(context: Context, clothes: ArrayList<Clothes>) : P
     }
 
     override fun destroyItem(container: ViewGroup, position: Int, `object`: Any) {
-//        container.removeView(`object` as LinearLayout)
         val vp = container as ViewPager
         val view = `object` as View
         vp.removeView(view)

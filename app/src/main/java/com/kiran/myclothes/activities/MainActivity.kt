@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.viewpager.widget.ViewPager
@@ -25,9 +26,7 @@ import com.kiran.myclothes.utils.Constants
 import com.kiran.myclothes.utils.coroutineMainScope
 import com.kiran.myclothes.utils.coroutineScope
 import com.yalantis.ucrop.UCrop
-import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
 
@@ -39,7 +38,6 @@ class MainActivity : AppCompatActivity() {
     private var favouriteClothesDao: FavouriteClothDao? = null
 
     lateinit var choosePhoto : ChoosePhoto
-//    lateinit var choosePhoto2 : ChoosePhoto
 
     lateinit var shirtsViewPagerAdapter : ClothesViewPagerAdapter
     lateinit var trousersViewPagerAdapter : ClothesViewPagerAdapter
@@ -59,7 +57,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_main)
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
@@ -72,8 +69,8 @@ class MainActivity : AppCompatActivity() {
 
 
         db = AppDatabase.getAppDataBase(context = this)
-        clothesDao = db?.clothesDao()
-        favouriteClothesDao = db?.favouriteCloth()
+//        clothesDao = db?.clothesDao()
+//        favouriteClothesDao = db?.favouriteCloth()
 
         dbHelper = AppDatabase.INSTANCE?.let { DatabaseHelperImpl(it) }
 
@@ -97,8 +94,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.favoriteImageView.setOnClickListener{
-           /* var intent = Intent(this, ImagePickerActivity::class.java)
-            startActivity(intent)*/
             addFavourite()
         }
 
@@ -154,29 +149,19 @@ class MainActivity : AppCompatActivity() {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == ChoosePhoto.CHOOSE_PHOTO_INTENT) {
-                var uri : Uri
                 if ( data != null && data.data != null) {
                     choosePhoto.handleGalleryResult(data)
-//                    uri = choosePhoto.handleGalleryResult(data)
                 } else {
                     choosePhoto.handleCameraResult(choosePhoto.cameraUri)
-//                    uri = choosePhoto.cameraUri
                 }
-                /*val cloth = Clothes(null, type, uri.toString())
-                saveCloth(cloth)*/
-
             } else if (requestCode == ChoosePhoto.SELECTED_IMG_CROP) {
 
                 val cloth = Clothes(null, type, choosePhoto.getCropImageUrl().toString())
                 saveCloth(cloth)
             } else if (requestCode == UCrop.REQUEST_CROP) {
-
-//                val cloth = Clothes(null, type, choosePhoto.getCropImageUrl().toString())
                 val cloth = Clothes(null, type, UCrop.getOutput(data!!).toString())
                 saveCloth(cloth)
-            }/*else if (resultCode == UCrop.RESULT_ERROR) {
-                final Throwable cropError = UCrop.getError(data);
-            }*/
+            }
         }
     }
 
@@ -195,15 +180,16 @@ class MainActivity : AppCompatActivity() {
     private fun getClothes(){
         coroutineScope.launch {
             try {
-                shirtList = clothesDao?.getClothesByType(Constants.CLOTH_TYPE_SHIRT) as ArrayList<Clothes>
-                trouserList = clothesDao?.getClothesByType(Constants.CLOTH_TYPE_TROUSER) as ArrayList<Clothes>
+                shirtList = dbHelper?.getClothes(Constants.CLOTH_TYPE_SHIRT) as ArrayList<Clothes>
+                trouserList = dbHelper?.getClothes(Constants.CLOTH_TYPE_TROUSER) as ArrayList<Clothes>
 
-                favouriteClothList = favouriteClothesDao?.getAllFavouriteCloth() as ArrayList<FavouriteCloth>
+                favouriteClothList = dbHelper?.getAllFavourites() as ArrayList<FavouriteCloth>
 
                 coroutineMainScope.launch {
                     shirtsViewPagerAdapter.setClothesList(shirtList)
                     trousersViewPagerAdapter.setClothesList(trouserList)
                     showUIElement()
+                    checkFavorites()
                 }
 
             } catch (e: Exception) {
@@ -266,11 +252,12 @@ class MainActivity : AppCompatActivity() {
             try {
                 if (favourite){
                     favourite = false
-                    favouriteClothesDao?.delete(favouriteCloth!!)
+                    dbHelper?.deleteFavourite(favouriteCloth!!)
+                    favouriteClothList.remove(favouriteCloth!!)
                 }else{
                     favourite = true
                     favouriteCloth = FavouriteCloth(null, shirtList[shirtPagerPosition].id!!, trouserList[trouserPagerPosition].id!!)
-                    favouriteClothesDao?.insert(favouriteCloth!!)
+                    dbHelper?.addFavourite(favouriteCloth!!)
                     favouriteClothList.add(favouriteCloth!!)
                 }
                 coroutineMainScope.launch {
@@ -314,14 +301,15 @@ class MainActivity : AppCompatActivity() {
 
     }
 
-    fun shuffleClothes(){
-        if (shirtList.size > 1 && trouserList.size > 1){
+    private fun shuffleClothes(){
+        if (shirtList.size > 1 || trouserList.size > 1){
             val shirtPosition = (0 until shirtList.size).random()
             val trouserPosition = (0 until trouserList.size).random()
 
             binding.shirtsViewPager.setCurrentItem(shirtPosition,true)
             binding.trousersViewPager.setCurrentItem(trouserPosition,true)
-
+        }else{
+            Toast.makeText(this, "You have only 1 pair, kindly add multiple pairs for shuffle", Toast.LENGTH_LONG).show()
         }
     }
 }

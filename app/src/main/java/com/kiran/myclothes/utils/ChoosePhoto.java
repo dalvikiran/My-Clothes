@@ -33,12 +33,6 @@ public class ChoosePhoto {
     public static int SELECT_PICTURE_CAMERA = 103;
     public static int currentAndroidDeviceVersion = Build.VERSION.SDK_INT;
 
-    private int ASPECT_X = 4;
-    private int ASPECT_Y = 3;
-    private int OUT_PUT_X = 400;
-    private int OUT_PUT_Y = 300;
-    private boolean SCALE = true;
-
     private Uri cropPictureUrl, selectedImageUri = null, cameraUrl = null;
     private Context mContext;
 
@@ -93,15 +87,12 @@ public class ChoosePhoto {
             if (file.exists()) {
                 if (currentAndroidDeviceVersion > 23) {
                     cropImage(FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() + ".provider", file), cropPictureUrl);
-//                    return FileProvider.getUriForFile(mContext, mContext.getApplicationContext().getPackageName() + ".provider", file);
                 } else {
                     cropImage(Uri.fromFile(file), cropPictureUrl);
-//                    return Uri.fromFile(file);
                 }
 
             } else {
                 cropImage(data.getData(), cropPictureUrl);
-//                return data.getData();
             }
 
         } catch (Exception e) {
@@ -138,7 +129,6 @@ public class ChoosePhoto {
     }
 
 
-//    public void handleCameraResult(Uri cameraPictureUrl) {
     public void handleCameraResult(Uri cameraPictureUrl) {
         try {
             cropPictureUrl = Uri.fromFile(FileUtil.getInstance(mContext)
@@ -163,45 +153,9 @@ public class ChoosePhoto {
     private void cropImage(final Uri sourceImage, Uri destinationImage) {
 
         UCrop.of(sourceImage, destinationImage)
-                .withAspectRatio(16, 9)
+                .withAspectRatio(1, 1)
 //                .withMaxResultSize(maxWidth, maxHeight)
                 .start((Activity) mContext);
 
-        /*Intent intent = new Intent("com.android.camera.action.CROP");
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        intent.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-
-        intent.setType("image/*");
-
-        List<ResolveInfo> list = mContext.getPackageManager().queryIntentActivities(intent, 0);
-        int size = list.size();
-        if (size == 0) {
-            //Utils.showToast(mContext, mContext.getString(R.string.error_cant_select_cropping_app));
-            selectedImageUri = sourceImage;
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, sourceImage);
-            ((Activity) mContext).startActivityForResult(intent, SELECTED_IMG_CROP);
-            return;
-        } else {
-            intent.setDataAndType(sourceImage, "image/*");
-            intent.putExtra("aspectX", ASPECT_X);
-            intent.putExtra("aspectY", ASPECT_Y);
-            intent.putExtra("outputY", OUT_PUT_Y);
-            intent.putExtra("outputX", OUT_PUT_X);
-            intent.putExtra("scale", SCALE);
-
-            //intent.putExtra("return-data", true);
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, destinationImage);
-            selectedImageUri = destinationImage;
-            if (size == 1) {
-                Intent i = new Intent(intent);
-                ResolveInfo res = list.get(0);
-                i.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
-                ((Activity) mContext).startActivityForResult(intent, SELECTED_IMG_CROP);
-            } else {
-                Intent i = new Intent(intent);
-                i.putExtra(Intent.EXTRA_INITIAL_INTENTS, list.toArray(new Parcelable[list.size()]));
-                ((Activity) mContext).startActivityForResult(intent, SELECTED_IMG_CROP);
-            }
-        }*/
     }
 }
